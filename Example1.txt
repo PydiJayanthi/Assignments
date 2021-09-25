@@ -1,0 +1,17 @@
+<html>
+<head>
+	<title>Alert messages</title>
+	<script type="text/javascript">
+		alert("finished loading");
+		function alertmeg(){
+			alert("Clicked on the button");
+			document.write("Clicked on the button");
+		}
+	</script>
+</head>
+<body>
+	<form>
+		<input type="button" value="Button" onclick="alertmeg();" />
+	</form>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<html>
+<head>
+	<title>Text Object value</title>
+	<script type="text/javascript">
+		function upperletter()
+		{
+			document.getElementById("output").value=document.getElementById("input").value.toUpperCase();
+		}
+	</script>
+</head>
+<body>
+	<form name="Upper letters">
+		<label>Small letters:</label>
+		<input type="text" name="input" id="input" value=" " onchange="upperletter()"/><br><br>
+		<label>Capital Letter:</label>
+		<input type="text" name="output" id="output" value=" "/><br>
+	</form>
+</body>
+</html>
