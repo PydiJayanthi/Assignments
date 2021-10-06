@@ -1,0 +1,23 @@
+TC No.      Preconditions                         Scenario Name     Action                                      Test data                  Expected Result
+TC__01      Attandance page should be visible  Attandance         1.select type of issue                        valid format for DOB       submitted successfully
+                                                   page           2.enter DOB in dd/mm/yy format                valid reason                error found
+																  3.select type of holiday                          
+																  4.give the valid reason
+																  5.select a different sanctioning authority
+																  6.click on submit
+
+TC__01      Attandance page                     Attandance        1.select type of issue                        valid format for DOB      submitted successfully
+              should be visible                    page           2.enter DOB in dd/mm/yy format                valid reason              
+																  3.select type of holiday                                                 all feilds cleared successfully
+																  4.give the valid reason
+																  5.select a different sanctioning authority
+																  6.click on submit
+																  7.click on clear
+																  
+		Attandance page                     Attandance            1.select type of issue                        valid format for DOB      data is visible to see
+              should be visible                    page           2.enter DOB in dd/mm/yy format                valid reason              
+																  3.select type of holiday                                                
+																  4.give the valid reason                                          
+																  5.select a different sanctioning authority
+															      6.click on view report
+																	  
