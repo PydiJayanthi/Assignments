@@ -1,0 +1,1778 @@
+Using $set to update only certain fields 
+--> multi : true will modify all matching records
+-->multi : false will modify first matching record
+---------------------------------------- 
+ 
+//I want to re-order all the books from apress, since they are reaching the re-order level 
+db.books.update( 
+   {  }, 
+   { $set: { reorder1:"" }}, 
+   { 
+     multi: true 
+   } 
+) 
+db.books.update( 
+   { publisher: "apress" }, 
+   { $set: { reorder: true, price:5000, no_of_pages: 500 } }, 
+   { 
+     multi: true 
+   } 
+) 
+ 
+ 
+Finding documents from Collections 
+----------------------------------- 
+db.books.find({}) 
+
+{
+        "_id" : ObjectId("617bcadf4e0d687f6025381a"),
+        "description" : "This book is split up into six sections, covering development, administration and deployment information",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Kristina Chodorow"
+                },
+                {
+                        "name" : "Ann Spencer"
+                }
+        ],
+        "tags" : [
+                "nosql",
+                "mongodb",
+                "document based db"
+        ],
+        "publisher" : "oreilly",
+        "isbn" : "978-93-5110-269-4",
+        "published_year" : 2013,
+        "price" : 780,
+        "no_of_pages" : 424,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z"),
+        "bookname" : "MongoDB - The Definite Guide"
+}
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381b"),
+        "name" : "Pro ASP.NET MVC5",
+        "description" : "Practical examples help to build maintainable, best performance web applications",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Adam Freeman"
+                }
+        ],
+        "tags" : [
+                "mvc",
+                "aps.net",
+                "web application"
+        ],
+        "publisher" : "apress",
+        "isbn" : "978-81-322-3014-4",
+        "published_year" : 2015,
+        "price" : 990,
+        "no_of_pages" : 600,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z")
+}
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381c"),
+        "name" : "Pro AngularJs",
+        "description" : "Learn to harness the power of modern web browsers",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Adam Freeman"
+                }
+        ],
+        "tags" : [
+                "spa",
+                "javascript frameworks",
+                "web application"
+        ],
+        "publisher" : "apress",
+        "isbn" : "978-81-322-3096-0",
+        "published_year" : 2016,
+        "price" : 855,
+        "no_of_pages" : 505,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z")
+}
+{ "_id" : ObjectId("617bcc0b4e0d687f6025381d"), "newfield" : 230 }
+{
+        "_id" : ObjectId("617bcd8d428fcb04f9287e7b"),
+        "tags" : [
+                "mean",
+                "nodejs",
+                "expressjs",
+                "open source",
+                "full stack"
+        ]
+}
+
+
+ 
+db.books.find().pretty() 
+
+{
+        "_id" : ObjectId("617bcadf4e0d687f6025381a"),
+        "description" : "This book is split up into six sections, covering development, administration and deployment information",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Kristina Chodorow"
+                },
+                {
+                        "name" : "Ann Spencer"
+                }
+        ],
+        "tags" : [
+                "nosql",
+                "mongodb",
+                "document based db"
+        ],
+        "publisher" : "oreilly",
+        "isbn" : "978-93-5110-269-4",
+        "published_year" : 2013,
+        "price" : 780,
+        "no_of_pages" : 424,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z"),
+        "bookname" : "MongoDB - The Definite Guide"
+}
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381b"),
+        "name" : "Pro ASP.NET MVC5",
+        "description" : "Practical examples help to build maintainable, best performance web applications",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Adam Freeman"
+                }
+        ],
+        "tags" : [
+                "mvc",
+                "aps.net",
+                "web application"
+        ],
+        "publisher" : "apress",
+        "isbn" : "978-81-322-3014-4",
+        "published_year" : 2015,
+        "price" : 990,
+        "no_of_pages" : 600,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z")
+}
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381c"),
+        "name" : "Pro AngularJs",
+        "description" : "Learn to harness the power of modern web browsers",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Adam Freeman"
+                }
+        ],
+        "tags" : [
+                "spa",
+                "javascript frameworks",
+                "web application"
+        ],
+        "publisher" : "apress",
+        "isbn" : "978-81-322-3096-0",
+        "published_year" : 2016,
+        "price" : 855,
+        "no_of_pages" : 505,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z")
+}
+{ "_id" : ObjectId("617bcc0b4e0d687f6025381d"), "newfield" : 230 }
+{
+        "_id" : ObjectId("617bcd8d428fcb04f9287e7b"),
+        "tags" : [
+                "mean",
+                "nodejs",
+                "expressjs",
+                "open source",
+                "full stack"
+        ]
+}
+
+
+ 
+ 
+Selecting based on criteria 
+---------------------------- 
+Equality condition filters 
+--------------------------- 
+ 
+1) db.books.find({publisher:"apress"})
+
+{ "_id" : ObjectId("617bcc084e0d687f6025381b"), "name" : "Pro ASP.NET MVC5", "description" : "Practical examples help to build maintainable, best performance web applications", "category" : ObjectId("57c62e1a1fda343c983f245f"), "authors" : [ { "name" : "Adam Freeman" } ], "tags" : [ "mvc", "aps.net", "web application" ], "publisher" : "apress", "isbn" : "978-81-322-3014-4", "published_year" : 2015, "price" : 990, "no_of_pages" : 600, "join_date" : ISODate("2021-10-29T10:27:52.724Z") }
+{ "_id" : ObjectId("617bcc084e0d687f6025381c"), "name" : "Pro AngularJs", "description" : "Learn to harness the power of modern web browsers", "category" : ObjectId("57c62e1a1fda343c983f245f"), "authors" : [ { "name" : "Adam Freeman" } ], "tags" : [ "spa", "javascript frameworks", "web application" ], "publisher" : "apress", "isbn" : "978-81-322-3096-0", "published_year" : 2016, "price" : 855, "no_of_pages" : 505, "join_date" : ISODate("2021-10-29T10:27:52.724Z") }
+ 
+2) Returns the list of books published by either apress or manning  
+db.books.find( {publisher: {$in : ["apress","manning"]} } ) 
+
+"_id" : ObjectId("617bcc084e0d687f6025381b"),
+        "name" : "Pro ASP.NET MVC5",
+        "description" : "Practical examples help to build maintainable, best performance web applications",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Adam Freeman"
+                }
+        ],
+        "tags" : [
+                "mvc",
+                "aps.net",
+                "web application"
+        ],
+        "publisher" : "apress",
+        "isbn" : "978-81-322-3014-4",
+        "published_year" : 2015,
+        "price" : 990,
+        "no_of_pages" : 600,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z")
+}
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381c"),
+        "name" : "Pro AngularJs",
+        "description" : "Learn to harness the power of modern web browsers",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Adam Freeman"
+                }
+        ],
+        "tags" : [
+                "spa",
+                "javascript frameworks",
+                "web application"
+        ],
+        "publisher" : "apress",
+        "isbn" : "978-81-322-3096-0",
+        "published_year" : 2016,
+        "price" : 855,
+        "no_of_pages" : 505,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z")
+}
+ 
+3) AND Condition 
+    //Returns the list of books publishes by apress in the year 2015 
+    db.books.find( {publisher: "apress", published_year: 2015} ) 
+ 
+
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381b"),
+        "name" : "Pro ASP.NET MVC5",
+        "description" : "Practical examples help to build maintainable, best performance web applications",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Adam Freeman"
+                }
+        ],
+        "tags" : [
+                "mvc",
+                "aps.net",
+                "web application"
+        ],
+        "publisher" : "apress",
+        "isbn" : "978-81-322-3014-4",
+        "published_year" : 2015,
+        "price" : 990,
+        "no_of_pages" : 600,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z")
+}
+
+
+
+
+4) OR Condition 
+    db.books.find({ $or: [{publisher: "apress"},  {price:3000}]}) 
+	db.books.find({ $or: [{publisher: "apress"}, {price: {$lte:3000}}]}) 
+
+ "_id" : ObjectId("617bcadf4e0d687f6025381a"),
+        "description" : "This book is split up into six sections, covering development, administration and deployment information",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Kristina Chodorow"
+                },
+                {
+                        "name" : "Ann Spencer"
+                }
+        ],
+        "tags" : [
+                "nosql",
+                "mongodb",
+                "document based db"
+        ],
+        "publisher" : "oreilly",
+        "isbn" : "978-93-5110-269-4",
+        "published_year" : 2013,
+        "price" : 780,
+        "no_of_pages" : 424,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z"),
+        "bookname" : "MongoDB - The Definite Guide"
+}
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381b"),
+        "name" : "Pro ASP.NET MVC5",
+        "description" : "Practical examples help to build maintainable, best performance web applications",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Adam Freeman"
+                }
+        ],
+        "tags" : [
+                "mvc",
+                "aps.net",
+                "web application"
+        ],
+        "publisher" : "apress",
+        "isbn" : "978-81-322-3014-4",
+        "published_year" : 2015,
+        "price" : 990,
+        "no_of_pages" : 600,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z")
+}
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381c"),
+        "name" : "Pro AngularJs",
+        "description" : "Learn to harness the power of modern web browsers",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Adam Freeman"
+                }
+        ],
+        "tags" : [
+                "spa",
+                "javascript frameworks",
+                "web application"
+        ],
+        "publisher" : "apress",
+        "isbn" : "978-81-322-3096-0",
+        "published_year" : 2016,
+        "price" : 855,
+        "no_of_pages" : 505,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z")
+}
+
+
+ 
+5) Query on Embedded Document 
+    -- Write an example from users 
+	db.books.find({ "authors.name":"Adam Freeman"}).pretty() 
+
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381b"),
+        "name" : "Pro ASP.NET MVC5",
+        "description" : "Practical examples help to build maintainable, best performance web applications",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Adam Freeman"
+                }
+        ],
+        "tags" : [
+                "mvc",
+                "aps.net",
+                "web application"
+        ],
+        "publisher" : "apress",
+        "isbn" : "978-81-322-3014-4",
+        "published_year" : 2015,
+        "price" : 990,
+        "no_of_pages" : 600,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z")
+}
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381c"),
+        "name" : "Pro AngularJs",
+        "description" : "Learn to harness the power of modern web browsers",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Adam Freeman"
+                }
+        ],
+        "tags" : [
+                "spa",
+                "javascript frameworks",
+                "web application"
+        ],
+        "publisher" : "apress",
+        "isbn" : "978-81-322-3096-0",
+        "published_year" : 2016,
+        "price" : 855,
+        "no_of_pages" : 505,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z")
+}
+
+
+ 
+6) Query on Arrays 
+    6.1 - Exact Match 
+        db.books.find( { tags: ["mean"] } ) 
+    6.2 Match an Array Element 
+        db.books.find( {tags: "open source"} ) 
+	db.books.find( { $or: [{tags: "open source"}, {tags: "spa"}] }) 
+
+{ "_id" : ObjectId("617bcd8d428fcb04f9287e7b"), "tags" : [ "mean", "nodejs", "expressjs", "open source", "full stack" ] }
+ { "_id" : ObjectId("617bcc084e0d687f6025381c"), "name" : "Pro AngularJs", "description" : "Learn to harness the power of modern web browsers", "category" : ObjectId("57c62e1a1fda343c983f245f"), "authors" : [ { "name" : "Adam Freeman" } ], "tags" : [ "spa", "javascript frameworks", "web application" ], "publisher" : "apress", "isbn" : "978-81-322-3096-0", "published_year" : 2016, "price" : 855, "no_of_pages" : 505, "join_date" : ISODate("2021-10-29T10:27:52.724Z") }
+{ "_id" : ObjectId("617bcd8d428fcb04f9287e7b"), "tags" : [ "mean", "nodejs", "expressjs", "open source", "full stack" ] }
+ 
+ 6.3 Matches a specific element of an Array 
+        db.books.find( { "tags.2": "open source" } ) 
+    6.4 querying with the size of the arrays 
+        db.books.find( {tags : {$size: 3}})
+
+{ "_id" : ObjectId("617bcadf4e0d687f6025381a"), "description" : "This book is split up into six sections, covering development, administration and deployment information", "category" : ObjectId("57c62e1a1fda343c983f245f"), "authors" : [ { "name" : "Kristina Chodorow" }, { "name" : "Ann Spencer" } ], "tags" : [ "nosql", "mongodb", "document based db" ], "publisher" : "oreilly", "isbn" : "978-93-5110-269-4", "published_year" : 2013, "price" : 780, "no_of_pages" : 424, "join_date" : ISODate("2021-10-29T10:27:52.724Z"), "bookname" : "MongoDB - The Definite Guide" }
+{ "_id" : ObjectId("617bcc084e0d687f6025381b"), "name" : "Pro ASP.NET MVC5", "description" : "Practical examples help to build maintainable, best performance web applications", "category" : ObjectId("57c62e1a1fda343c983f245f"), "authors" : [ { "name" : "Adam Freeman" } ], "tags" : [ "mvc", "aps.net", "web application" ], "publisher" : "apress", "isbn" : "978-81-322-3014-4", "published_year" : 2015, "price" : 990, "no_of_pages" : 600, "join_date" : ISODate("2021-10-29T10:27:52.724Z") }
+{ "_id" : ObjectId("617bcc084e0d687f6025381c"), "name" : "Pro AngularJs", "description" : "Learn to harness the power of modern web browsers", "category" : ObjectId("57c62e1a1fda343c983f245f"), "authors" : [ { "name" : "Adam Freeman" } ], "tags" : [ "spa", "javascript frameworks", "web application" ], "publisher" : "apress", "isbn" : "978-81-322-3096-0", "published_year" : 2016, "price" : 855, "no_of_pages" : 505, "join_date" : ISODate("2021-10-29T10:27:52.724Z") }
+
+ db.books.find( {tags : {$size: {$gt:3}}}) 	
+
+Error: error: {
+        "ok" : 0,
+        "errmsg" : "$size needs a number",
+        "code" : 2,
+        "codeName" : "BadValue"
+}
+	
+7) greater than, less than 
+    db.books.find( { price: { $gt: 1000, $lt: 2000 } } ) 
+    db.books.find( { price: { $gte: 1000, $lte: 2000 } } ) 
+ 
+ 9) Projection 
+    -> to return specific fields from collections 
+     db.books.find({})
+	 db.books.find({},{publisher:1,name:1}).pretty()
+
+            { "_id" : ObjectId("617bcadf4e0d687f6025381a"), "publisher" : "oreilly" }
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381b"),
+        "name" : "Pro ASP.NET MVC5",
+        "publisher" : "apress"
+}
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381c"),
+        "name" : "Pro AngularJs",
+        "publisher" : "apress"
+}
+{ "_id" : ObjectId("617bcc0b4e0d687f6025381d") }
+{ "_id" : ObjectId("617bcd8d428fcb04f9287e7b") }
+	 db.books.find({},{name:0,publisher:0}).pretty()
+
+
+{
+        "_id" : ObjectId("617bcadf4e0d687f6025381a"),
+        "description" : "This book is split up into six sections, covering development, administration and deployment information",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Kristina Chodorow"
+                },
+                {
+                        "name" : "Ann Spencer"
+                }
+        ],
+        "tags" : [
+                "nosql",
+                "mongodb",
+                "document based db"
+        ],
+        "isbn" : "978-93-5110-269-4",
+        "published_year" : 2013,
+        "price" : 780,
+        "no_of_pages" : 424,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z"),
+        "bookname" : "MongoDB - The Definite Guide"
+}
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381b"),
+        "description" : "Practical examples help to build maintainable, best performance web applications",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Adam Freeman"
+                }
+        ],
+        "tags" : [
+                "mvc",
+                "aps.net",
+                "web application"
+        ],
+        "isbn" : "978-81-322-3014-4",
+        "published_year" : 2015,
+        "price" : 990,
+        "no_of_pages" : 600,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z")
+}
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381c"),
+        "description" : "Learn to harness the power of modern web browsers",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Adam Freeman"
+                }
+        ],
+        "tags" : [
+                "spa",
+                "javascript frameworks",
+                "web application"
+        ],
+        "isbn" : "978-81-322-3096-0",
+        "published_year" : 2016,
+        "price" : 855,
+        "no_of_pages" : 505,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z")
+}
+{ "_id" : ObjectId("617bcc0b4e0d687f6025381d"), "newfield" : 230 }
+{
+        "_id" : ObjectId("617bcd8d428fcb04f9287e7b"),
+        "tags" : [
+                "mean",
+                "nodejs",
+                "expressjs",
+                "open source",
+                "full stack"
+        ]
+}
+
+
+	 --> 1 is to include, 0 for exclude
+	 
+    db.tempusers.find( { status: "Active" }, { first_name: 1, last_name: 1 } )     
+
+{ "_id" : ObjectId("617b98b94e0d687f60253814"), "first_name" : "William", "last_name" : "Shakespeare" }
+
+ 
+    db.users.find( { status: "Active" }, { first_name: 1, last_name: 1, _id: 0 } ) 
+	
+	--> for embedded attribute
+	db.users.find({}, {first_name:1,"address.city":1}).pretty();    
+ 
+10) Excluding few fields and returning all the others 
+   
+11) Returning specific fields in an embedded document 
+    db.users.find( 
+       { status: "Active" }, 
+         { name: 1, status: 1, "address.city": 1 } 
+    ) 
+ 
+12) Supress fields in an embedded document 
+    db.users.find( 
+       { status: "Active" }, 
+         { uname: 1, email: 1, "address.country": 0 } 
+    ) -> This fails 
+
+Error: error: {
+        "ok" : 0,
+        "errmsg" : "Cannot do exclusion on field address.country in inclusion projection",
+        "code" : 31254,
+        "codeName" : "Location31254"
+}
+
+    db.users.find( 
+       { status: "Active" }, 
+         { uname: 0, email: 0, "address.country": 0 } 
+    ) 
+ 
+13) Querying for null values 
+    
+
+BulkWriteResult({
+        "writeErrors" : [
+                {
+                        "index" : 0,
+                        "code" : 11000,
+                        "errmsg" : "E11000 duplicate key error collection: mydb.testusers index: _id_ dup key: { _id: 1000.0 }",
+                        "op" : {
+                                "_id" : 1000,
+                                "name" : null
+                        }
+                }
+        ],
+        "writeConcernErrors" : [ ],
+        "nInserted" : 0,
+        "nUpserted" : 0,
+        "nMatched" : 0,
+        "nModified" : 0,
+        "nRemoved" : 0,
+        "upserted" : [ ]
+})
+    db.testusers.find( { name: null } ) 
+
+{ "_id" : 1000, "name" : null }
+{ "_id" : 1001 }
+    db.testusers.find( { name : { $type: 10 } } ) // 10 is the numerical value assigned to the type null 
+    
+     { "_id" : 1000, "name" : null }
+
+db.testusers.find( { name : { $exists: false } } )
+
+{ "_id" : 1001 }
+
+14) For pagination, starts from skip, limit is range
+
+	db.books.find().skip(1).limit(1)
+
+
+{ "_id" : ObjectId("617bcc084e0d687f6025381b"), "name" : "Pro ASP.NET MVC5", "description" : "Practical examples help to build maintainable, best performance web applications", "category" : ObjectId("57c62e1a1fda343c983f245f"), "authors" : [ { "name" : "Adam Freeman" } ], "tags" : [ "mvc", "aps.net", "web application" ], "publisher" : "apress", "isbn" : "978-81-322-3014-4", "published_year" : 2015, "price" : 990, "no_of_pages" : 600, "join_date" : ISODate("2021-10-29T10:27:52.724Z") }
+
+15) db.books.find( {}, {name:1, price:1} ).sort({"price" : 1})
+
+    db.books.find().sort({"price" : -1})    
+
+{ "_id" : ObjectId("617bcc084e0d687f6025381b"), "name" : "Pro ASP.NET MVC5", "description" : "Practical examples help to build maintainable, best performance web applications", "category" : ObjectId("57c62e1a1fda343c983f245f"), "authors" : [ { "name" : "Adam Freeman" } ], "tags" : [ "mvc", "aps.net", "web application" ], "publisher" : "apress", "isbn" : "978-81-322-3014-4", "published_year" : 2015, "price" : 990, "no_of_pages" : 600, "join_date" : ISODate("2021-10-29T10:27:52.724Z") }
+{ "_id" : ObjectId("617bcc084e0d687f6025381c"), "name" : "Pro AngularJs", "description" : "Learn to harness the power of modern web browsers", "category" : ObjectId("57c62e1a1fda343c983f245f"), "authors" : [ { "name" : "Adam Freeman" } ], "tags" : [ "spa", "javascript frameworks", "web application" ], "publisher" : "apress", "isbn" : "978-81-322-3096-0", "published_year" : 2016, "price" : 855, "no_of_pages" : 505, "join_date" : ISODate("2021-10-29T10:27:52.724Z") }
+{ "_id" : ObjectId("617bcadf4e0d687f6025381a"), "description" : "This book is split up into six sections, covering development, administration and deployment information", "category" : ObjectId("57c62e1a1fda343c983f245f"), "authors" : [ { "name" : "Kristina Chodorow" }, { "name" : "Ann Spencer" } ], "tags" : [ "nosql", "mongodb", "document based db" ], "publisher" : "oreilly", "isbn" : "978-93-5110-269-4", "published_year" : 2013, "price" : 780, "no_of_pages" : 424, "join_date" : ISODate("2021-10-29T10:27:52.724Z"), "bookname" : "MongoDB - The Definite Guide" }
+{ "_id" : ObjectId("617bcc0b4e0d687f6025381d"), "newfield" : 230 }
+{ "_id" : ObjectId("617bcd8d428fcb04f9287e7b"), "tags" : [ "mean", "nodejs", "expressjs", "open source", "full stack" ] }
+
+	--> 1 asc, -1 dec
+	
+16) Like query- to find the name 
+	db.books.find({name: /orr/}) 
+	{ name: { $regex: /acme.*corp/i, $nin: [ 'acmeblahcorp' ] } }
+	{ name: { $regex: /acme.*corp/, $options: 'i', $nin: [ 'acmeblahcorp' ] } }
+	{ name: { $regex: 'acme.*corp', $options: 'i', $nin: [ 'acmeblahcorp' ] } }
+	db.users.find({ name: { $regex: '(?i)a(?-i)cme' } })
+
+
+uncaught exception: SyntaxError: unexpected token: ':' :
+
+
+Indexing 
+--------------------------------------------
+db.books.createIndex( { publisher:1} )
+
+{
+        "numIndexesBefore" : 1,
+        "numIndexesAfter" : 2,
+        "createdCollectionAutomatically" : false,
+        "ok" : 1
+}
+
+db.books.createIndex( { publisher:1,name:1 } )
+
+{
+        "numIndexesBefore" : 2,
+        "numIndexesAfter" : 3,
+        "createdCollectionAutomatically" : false,
+        "ok" : 1
+}
+
+db.books.createIndex( {publisher:1} , { unique: true } )
+
+{
+        "ok" : 0,
+        "errmsg" : "An existing index has the same name as the requested index. When index names are not specified, they are auto generated and can cause conflicts. Please refer to our documentation. Requested index: { v: 2, unique: true, key: { publisher: 1.0 }, name: \"publisher_1\" }, existing index: { v: 2, key: { publisher: 1.0 }, name: \"publisher_1\" }",
+        "code" : 86,
+        "codeName" : "IndexKeySpecsConflict"
+}
+
+To create a text index
+db.books.createIndex( { name: "nice product" } )
+
+{
+        "ok" : 0,
+        "errmsg" : "Error in specification { key: { name: \"nice product\" }, name: \"name_nice product\" } :: caused by :: Unknown index plugin 'nice product'",
+        "code" : 67,
+        "codeName" : "CannotCreateIndex"
+}
+	
+Analyze Query Performance
+---------------------------
+db.books.find({},{publisher:1,name:1}).explain("executionStats") 
+
+{
+        "explainVersion" : "1",
+        "queryPlanner" : {
+                "namespace" : "mydb.books",
+                "indexFilterSet" : false,
+                "parsedQuery" : {
+
+                },
+                "maxIndexedOrSolutionsReached" : false,
+                "maxIndexedAndSolutionsReached" : false,
+                "maxScansToExplodeReached" : false,
+                "winningPlan" : {
+                        "stage" : "PROJECTION_SIMPLE",
+                        "transformBy" : {
+                                "publisher" : 1,
+                                "name" : 1
+                        },
+                        "inputStage" : {
+                                "stage" : "COLLSCAN",
+                                "direction" : "forward"
+                        }
+                },
+                "rejectedPlans" : [ ]
+        },
+        "executionStats" : {
+                "executionSuccess" : true,
+                "nReturned" : 5,
+                "executionTimeMillis" : 17,
+                "totalKeysExamined" : 0,
+                "totalDocsExamined" : 5,
+                "executionStages" : {
+                        "stage" : "PROJECTION_SIMPLE",
+                        "nReturned" : 5,
+                        "executionTimeMillisEstimate" : 0,
+                        "works" : 7,
+                        "advanced" : 5,
+                        "needTime" : 1,
+                        "needYield" : 0,
+                        "saveState" : 1,
+                        "restoreState" : 1,
+                        "isEOF" : 1,
+                        "transformBy" : {
+                                "publisher" : 1,
+                                "name" : 1
+                        },
+                        "inputStage" : {
+                                "stage" : "COLLSCAN",
+                                "nReturned" : 5,
+                                "executionTimeMillisEstimate" : 0,
+                                "works" : 7,
+                                "advanced" : 5,
+                                "needTime" : 1,
+                                "needYield" : 0,
+                                "saveState" : 1,
+                                "restoreState" : 1,
+                                "isEOF" : 1,
+                                "direction" : "forward",
+                                "docsExamined" : 5
+                        }
+                }
+        },
+        "command" : {
+                "find" : "books",
+                "filter" : {
+
+                },
+                "projection" : {
+                        "publisher" : 1,
+                        "name" : 1
+                },
+                "$db" : "mydb"
+        },
+        "serverInfo" : {
+                "host" : "DESKTOP-MM1GTT0",
+                "port" : 27017,
+                "version" : "5.0.3",
+                "gitVersion" : "657fea5a61a74d7a79df7aff8e4bcf0bc742b748"
+        },
+        "serverParameters" : {
+                "internalQueryFacetBufferSizeBytes" : 104857600,
+                "internalQueryFacetMaxOutputDocSizeBytes" : 104857600,
+                "internalLookupStageIntermediateDocumentMaxSizeBytes" : 104857600,
+                "internalDocumentSourceGroupMaxMemoryBytes" : 104857600,
+                "internalQueryMaxBlockingSortMemoryUsageBytes" : 104857600,
+                "internalQueryProhibitBlockingMergeOnMongoS" : 0,
+                "internalQueryMaxAddToSetBytes" : 104857600,
+                "internalDocumentSourceSetWindowFieldsMaxMemoryBytes" : 104857600
+        },
+        "ok" : 1
+}
+
+
+db.book.find({publisher:"apress"}).explain("executionStats")
+
+{
+        "explainVersion" : "1",
+        "queryPlanner" : {
+                "namespace" : "mydb.book",
+                "indexFilterSet" : false,
+                "parsedQuery" : {
+                        "publisher" : {
+                                "$eq" : "apress"
+                        }
+                },
+                "maxIndexedOrSolutionsReached" : false,
+                "maxIndexedAndSolutionsReached" : false,
+                "maxScansToExplodeReached" : false,
+                "winningPlan" : {
+                        "stage" : "EOF"
+                },
+                "rejectedPlans" : [ ]
+        },
+        "executionStats" : {
+                "executionSuccess" : true,
+                "nReturned" : 0,
+                "executionTimeMillis" : 1,
+                "totalKeysExamined" : 0,
+                "totalDocsExamined" : 0,
+                "executionStages" : {
+                        "stage" : "EOF",
+                        "nReturned" : 0,
+                        "executionTimeMillisEstimate" : 0,
+                        "works" : 1,
+                        "advanced" : 0,
+                        "needTime" : 0,
+                        "needYield" : 0,
+                        "saveState" : 0,
+                        "restoreState" : 0,
+                        "isEOF" : 1
+                }
+        },
+        "command" : {
+                "find" : "book",
+                "filter" : {
+                        "publisher" : "apress"
+                },
+                "$db" : "mydb"
+        },
+        "serverInfo" : {
+                "host" : "DESKTOP-MM1GTT0",
+                "port" : 27017,
+                "version" : "5.0.3",
+                "gitVersion" : "657fea5a61a74d7a79df7aff8e4bcf0bc742b748"
+        },
+        "serverParameters" : {
+                "internalQueryFacetBufferSizeBytes" : 104857600,
+                "internalQueryFacetMaxOutputDocSizeBytes" : 104857600,
+                "internalLookupStageIntermediateDocumentMaxSizeBytes" : 104857600,
+                "internalDocumentSourceGroupMaxMemoryBytes" : 104857600,
+                "internalQueryMaxBlockingSortMemoryUsageBytes" : 104857600,
+                "internalQueryProhibitBlockingMergeOnMongoS" : 0,
+                "internalQueryMaxAddToSetBytes" : 104857600,
+                "internalDocumentSourceSetWindowFieldsMaxMemoryBytes" : 104857600
+        },
+        "ok" : 1
+}
+
+
+db.books.find({publisher:"apress"},{publisher:1,name:1}).explain("executionStats")
+
+{
+        "explainVersion" : "1",
+        "queryPlanner" : {
+                "namespace" : "mydb.books",
+                "indexFilterSet" : false,
+                "parsedQuery" : {
+                        "publisher" : {
+                                "$eq" : "apress"
+                        }
+                },
+                "maxIndexedOrSolutionsReached" : false,
+                "maxIndexedAndSolutionsReached" : false,
+                "maxScansToExplodeReached" : false,
+                "winningPlan" : {
+                        "stage" : "PROJECTION_SIMPLE",
+                        "transformBy" : {
+                                "publisher" : 1,
+                                "name" : 1
+                        },
+                        "inputStage" : {
+                                "stage" : "FETCH",
+                                "inputStage" : {
+                                        "stage" : "IXSCAN",
+                                        "keyPattern" : {
+                                                "publisher" : 1
+                                        },
+                                        "indexName" : "publisher_1",
+                                        "isMultiKey" : false,
+                                        "multiKeyPaths" : {
+                                                "publisher" : [ ]
+                                        },
+                                        "isUnique" : false,
+                                        "isSparse" : false,
+                                        "isPartial" : false,
+                                        "indexVersion" : 2,
+                                        "direction" : "forward",
+                                        "indexBounds" : {
+                                                "publisher" : [
+                                                        "[\"apress\", \"apress\"]"
+                                                ]
+                                        }
+                                }
+                        }
+                },
+                "rejectedPlans" : [
+                        {
+                                "stage" : "PROJECTION_SIMPLE",
+                                "transformBy" : {
+                                        "publisher" : 1,
+                                        "name" : 1
+                                },
+                                "inputStage" : {
+                                        "stage" : "FETCH",
+                                        "inputStage" : {
+                                                "stage" : "IXSCAN",
+                                                "keyPattern" : {
+                                                        "publisher" : 1,
+                                                        "name" : 1
+                                                },
+                                                "indexName" : "publisher_1_name_1",
+                                                "isMultiKey" : false,
+                                                "multiKeyPaths" : {
+                                                        "publisher" : [ ],
+                                                        "name" : [ ]
+                                                },
+                                                "isUnique" : false,
+                                                "isSparse" : false,
+                                                "isPartial" : false,
+                                                "indexVersion" : 2,
+                                                "direction" : "forward",
+                                                "indexBounds" : {
+                                                        "publisher" : [
+                                                                "[\"apress\", \"apress\"]"
+                                                        ],
+                                                        "name" : [
+                                                                "[MinKey, MaxKey]"
+                                                        ]
+                                                }
+                                        }
+                                }
+                        }
+                ]
+        },
+        "executionStats" : {
+                "executionSuccess" : true,
+                "nReturned" : 2,
+                "executionTimeMillis" : 73,
+                "totalKeysExamined" : 2,
+                "totalDocsExamined" : 2,
+                "executionStages" : {
+                        "stage" : "PROJECTION_SIMPLE",
+                        "nReturned" : 2,
+                        "executionTimeMillisEstimate" : 0,
+                        "works" : 4,
+                        "advanced" : 2,
+                        "needTime" : 0,
+                        "needYield" : 0,
+                        "saveState" : 1,
+                        "restoreState" : 1,
+                        "isEOF" : 1,
+                        "transformBy" : {
+                                "publisher" : 1,
+                                "name" : 1
+                        },
+                        "inputStage" : {
+                                "stage" : "FETCH",
+                                "nReturned" : 2,
+                                "executionTimeMillisEstimate" : 0,
+                                "works" : 4,
+                                "advanced" : 2,
+                                "needTime" : 0,
+                                "needYield" : 0,
+                                "saveState" : 1,
+                                "restoreState" : 1,
+                                "isEOF" : 1,
+                                "docsExamined" : 2,
+                                "alreadyHasObj" : 0,
+                                "inputStage" : {
+                                        "stage" : "IXSCAN",
+                                        "nReturned" : 2,
+                                        "executionTimeMillisEstimate" : 0,
+                                        "works" : 3,
+                                        "advanced" : 2,
+                                        "needTime" : 0,
+                                        "needYield" : 0,
+                                        "saveState" : 1,
+                                        "restoreState" : 1,
+                                        "isEOF" : 1,
+                                        "keyPattern" : {
+                                                "publisher" : 1
+                                        },
+                                        "indexName" : "publisher_1",
+                                        "isMultiKey" : false,
+                                        "multiKeyPaths" : {
+                                                "publisher" : [ ]
+                                        },
+                                        "isUnique" : false,
+                                        "isSparse" : false,
+                                        "isPartial" : false,
+                                        "indexVersion" : 2,
+                                        "direction" : "forward",
+                                        "indexBounds" : {
+                                                "publisher" : [
+                                                        "[\"apress\", \"apress\"]"
+                                                ]
+                                        },
+                                        "keysExamined" : 2,
+                                        "seeks" : 1,
+                                        "dupsTested" : 0,
+                                        "dupsDropped" : 0
+                                }
+                        }
+                }
+        },
+        "command" : {
+                "find" : "books",
+                "filter" : {
+                        "publisher" : "apress"
+                },
+                "projection" : {
+                        "publisher" : 1,
+                        "name" : 1
+                },
+                "$db" : "mydb"
+        },
+        "serverInfo" : {
+                "host" : "DESKTOP-MM1GTT0",
+                "port" : 27017,
+                "version" : "5.0.3",
+                "gitVersion" : "657fea5a61a74d7a79df7aff8e4bcf0bc742b748"
+        },
+        "serverParameters" : {
+                "internalQueryFacetBufferSizeBytes" : 104857600,
+                "internalQueryFacetMaxOutputDocSizeBytes" : 104857600,
+                "internalLookupStageIntermediateDocumentMaxSizeBytes" : 104857600,
+                "internalDocumentSourceGroupMaxMemoryBytes" : 104857600,
+                "internalQueryMaxBlockingSortMemoryUsageBytes" : 104857600,
+                "internalQueryProhibitBlockingMergeOnMongoS" : 0,
+                "internalQueryMaxAddToSetBytes" : 104857600,
+                "internalDocumentSourceSetWindowFieldsMaxMemoryBytes" : 104857600
+        },
+        "ok" : 1
+}
+
+
+Text index
+----------------
+db.posts.insert([
+{ 
+   "_id" : ObjectId("53493d14d852429c10000002"), 
+   "post_text" : "Mongodb training by Sonata Software", 
+   "tags" : [ "mongodb", "training" ]
+},
+{
+   "_id" : ObjectId("53493d1fd852429c10000003"), 
+   "post_text" : "Sonata Software Ltd mongo training",
+   "tags" : [ "mongodb", "tutorial" ] 
+}])
+
+BulkWriteResult({
+        "writeErrors" : [ ],
+        "writeConcernErrors" : [ ],
+        "nInserted" : 2,
+        "nUpserted" : 0,
+        "nMatched" : 0,
+        "nModified" : 0,
+        "nRemoved" : 0,
+        "upserted" : [ ]
+})
+
+//create index
+db.posts.ensureIndex({post_text:"text"})
+
+uncaught exception: TypeError: db.posts.ensureIndex is not a function :
+
+//search
+db.posts.find({$text:{$search:"mongo"}})
+
+Error: error: {
+        "ok" : 0,
+        "errmsg" : "text index required for $text query",
+        "code" : 27,
+        "codeName" : "IndexNotFound"
+}
+
+	
+Removing Documents
+--------------------
+
+db.collection.remove({})
+
+db.collection.deleteOne({})
+
+db.collection.deleteMany({})
+
+db.books.remove({"_id" : ObjectId("")})
+
+
+Relationships
+-------------------
+db.users.insert( 
+{ 
+    _id:"1",
+	first_name:"Sidney", 
+    last_name: "Sheldon", 
+    uname: "sidney", 
+    phone: "+1 91357846", 
+    email: "sidney@bookstore.com", 
+    status: "Active" ,
+    address:  
+    { 
+        city:"Bangalore", 
+        pincode: "560001",
+        state: "Karnataka", 
+        country: "india" 
+    } 
+}) 
+
+db.users.find({"uname":"sidney"},{"address":1})
+
+db.address.insert({ 
+        city:"Bangalore", 
+        pincode: "560001",
+        state: "Karnataka", 
+        country: "india" 
+    } )
+
+db.users1.insert( 
+{ 
+    _id:"2",
+	first_name:"Sidney", 
+    last_name: "Sheldon", 
+    uname: "sidney", 
+    phone: "+1 91357846", 
+    email: "sidney@bookstore.com", 
+    status: "Active" ,
+    address:  
+    [
+        ObjectId("60fa5b5d8faea909994e2251")
+    ]
+}) 
+
+db.users1.findOne({"uname":"sidney"},{"address":1})
+
+Database References
+------------------------
+db.users2.insert( 
+{ 
+   	first_name:"Ganesh", 
+    last_name: "Babu", 
+    uname: "ganesh1", 
+    phone: "+1 91357846", 
+    email: "ganesh@bookstore.com", 
+    status: "Active" ,
+    address:  {
+		"$ref": "address",
+		"$id": ObjectId("60fa5b5d8faea909994e2251"),
+		"$db": "trng"},
+		"contact": "987654321",
+}
+) 
+
+var user = db.users2.findOne({"uname":"ganesh1"})
+var dbRef = user.address
+db[dbRef.$ref].findOne({"_id":(dbRef.$id)})
+--------------------------------------------------------------------
+Aggregation
+Aggregation Pipeline
+MapReduce
+
+
+Aggregation
+-------------
+
+ -> Documents enter a multistage processing pipeline, where they gets transformed into an aggregated result.
+
+Single purpose aggregate functions
+----------------------------------
+
+To get distinct values
+-----------------------
+
+-> db.books.distinct("publisher")
+
+
+to get the number of books
+---------------------------------
+-> db.books.count()
+
+
+oreilly {
+	doc1
+	doc2
+} 
+
+for (int i =0; i< oreilly.count; i++)
+{
+   totalnoofbooks = totalnoofbooks + 5;	
+}
+
+apress{
+	doc3
+	doc4
+	doc5
+}
+
+manning{
+	doc6
+	doc7
+}
+
+oreilly - 2
+apress - 3
+manning - 2
+
+
+
+Aggregator functions together with group by
+-------------------------------------------
+
+//To get the no of books for each publisher
+db.books.aggregate(
+    [{
+    $group : {_id : "$publisher", count:{$sum:1}}
+    }]
+)
+
+publisher : apress
+sum : 1
+publisher: apress
+sum : 1+ 1 = 2
+
+
+
+SELECT publisher as _id, count(name) as total from books group by publisher
+
+The different aggregators available
+-----------------------------------
+$first
+$last
+$avg
+$max
+$min
+
+
+add all the subjects marks / 400 * 100
+
+(350/400) * 100
+
+Aggregation Pipeline
+-------------------
+-->sum, then divide, then multiply
+db.marks.insert(
+{
+    first_name: "Aashish",
+    last_name: "Singh",
+    roll_number: "1005",
+    class: "1D", 
+    marks:
+    {
+        english : 75,
+        hindi: 90,
+        maths: 100,
+        computer: 100
+    }
+})
+
+
+db.marks.insert(
+{
+    first_name: "Rohan",
+    last_name: "Chawla",
+    roll_number: "1006",
+    class: "1D",	
+    marks:
+    {
+        english : 85,
+        hindi: 90,
+        maths: 92,
+        computer: 98
+    }
+})
+
+db.marks.insert(
+{
+    first_name: "George",
+    last_name: "Daniel",
+    roll_number: "1007",
+    class: "1D",	
+    marks:
+    {
+        english : 95,
+        hindi: 95,
+        maths: 100,
+        computer: 100
+    }
+})
+
+sum -up the individual subjects marks
+divide the total / 400
+multiply * 100
+
+345/400 * 100
+
+db.marks.aggregate(
+{
+    "$project" : {
+        "first_name" : 1,
+		"roll_number" : 1,
+		"Percentage": {
+		"$multiply": [{"$divide":[{"$add":["$marks.english","$marks.hindi","$marks.maths","$marks.computer"]}, 400]}, 100]
+         }
+     }
+})
+
+select first_name, last_name, ( (english+hindi+maths+computer) / 400 ) * 100) AS Percentage from MArks
+
+
+
+db.locations.insert({
+  "_id": "10280",
+  "city": "Anniston",
+  "state": "AL",
+  "pop": 5574,
+  "loc": [
+    33.58,
+    32.67
+  ]
+})
+db.locations.insert({
+  "_id": "10281",
+  "city": "Troy",
+  "state": "AL",
+  "pop": 6344,
+  "loc": [
+    31.87,
+    33.23
+  ]
+})
+db.locations.insert({
+  "_id": "10282",
+  "city": "Prescott",
+  "state": "AZ",
+  "pop": 3500,
+  "loc": [
+    34.65,
+    112.02
+  ]
+})
+
+db.locations.insert({
+  "_id": "10283",
+  "city": "Luke",
+  "state": "AZ",
+  "pop": 8500,
+  "loc": [
+    33.53,
+    36.93
+  ]
+})
+db.locations.insert({
+  "_id": "10284",
+  "city": "Fort Myers",
+  "state": "FL",
+  "pop": 10000,
+  "loc": [
+    26.58,
+    81.87
+  ]
+})
+db.locations.insert({
+  "_id": "10286",
+  "city": "AAAAA",
+  "state": "FL",
+  "pop": 2000,
+  "loc": [
+    28.08,
+    81.55
+  ]
+})
+
+
+To find the states, which are having more than 12000 population
+--------------------------------------------------------------
+
+db.locations.aggregate( [
+   	
+   	{ $group: { _id: "$state", totalPop: { $sum: "$pop" } } },
+   	{ $match: { totalPop: { $gte: 12000 } } }
+   
+] )
+
+
+
+db.locations.aggregate( [
+   	
+   	{ $group: { _id: "$state", totalPop: { $sum: "$pop" } } }
+] )
+
+
+Getting average population in each state
+--------------------------------------------
+
+db.locations.aggregate( [
+   { $group: { _id: { state: "$state", city: "$city" }, population: { $sum: "$pop" } } },
+   { $group: { _id: "$_id.state", avgCityPop: { $avg: "$population" } } }
+] )
+
+db.locations.aggregate( [
+   { $group: { _id: { state: "$state", city: "$city" }, population: { $sum: "$pop" } } }
+] )
+
+db.locations.aggregate( [
+   { $group: { _id: "$state", city:$city, avgCityPop: { $avg: "$pop" } } }
+] )
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+state1 city1 : 10000
+state1 city2:  12000
+state2 city3 : 45000
+state2 city4 : 32000
+
+state1 city1 : 10000
+state1 city2:  12000
+state1 city5 : 15000
+
+state2 city4 : 32000
+state2 city3 : 45000
+
+
+state1
+ biggest : 12000, city2
+ smallest: 10000, city1
+
+Getting the biggest and smallest city in each state
+----------------------------------------------------
+db.locations.aggregate( [
+   { $group:
+      {
+        _id: { state: "$state", city: "$city" },
+        population: { $sum: "$pop" }
+      }
+   },
+   { $sort: { population: 1 } },
+   { $group:
+      {
+        _id : "$_id.state",
+        biggestCity:  { $last: "$_id.city" },
+        biggestPop:   { $last: "$population" },
+        smallestCity: { $first: "$_id.city" },
+        smallestPop:  { $first: "$population" }
+      }
+   },
+  { $project:
+    { 
+      state: "$_id",
+      biggestCity:  { name: "$biggestCity",  pop: "$biggestPop" },
+      smallestCity: { name: "$smallestCity", pop: "$smallestPop" }
+    }
+  }
+] ).pretty()
+
+ // the following $project is optional, and
+  // modifies the output format.
+
+
+
+MAPReduce
+---------
+-> similar to aggregate functions, but allows us to have our own logic
+-> the logics are usually written as functions using javascript
+
+
+MongoDB applies the map phase to each input document (i.e. the documents in the collection that match the query condition). 
+
+The map function emits key-value pairs. 
+
+For those keys that have multiple values, MongoDB applies the reduce phase, which collects and condenses the aggregated data. 
+
+MongoDB then stores the results in a collection. 
+
+
+db.orders.insert({
+     customer: "abc",
+     ord_date: new Date("Jan 01, 2016"),
+     status: 'completed',
+     price: 25,
+     items: [ { item: "item1", qty: 5, price: 2.5 },
+              { item: "item2", qty: 5, price: 2.5 } ]
+})
+
+db.orders.insert({
+     customer: "abc",
+     ord_date: new Date("Feb 01, 2016"),
+     status: 'completed',
+     price: 45,
+     items: [ { item: "item3", qty: 5, price: 5.5 },
+              { item: "item4", qty: 5, price: 7.5 } ]
+})
+
+db.orders.insert({
+     customer: "xyz",
+     ord_date: new Date("Mar 01, 2016"),
+     status: 'completed',
+     price: 75,
+     items: [ { item: "item3", qty: 5, price: 8.5 },
+              { item: "item4", qty: 5, price: 9.5 } ]
+})
+
+db.orders.insert({
+     customer: "xyz",
+     ord_date: new Date("Apr 01, 2016"),
+     status: 'completed',
+     price: 55,
+     items: [ { item: "item3", qty: 5, price: 6.5 },
+              { item: "item4", qty: 5, price: 4.5 } ]
+})
+
+db.orders.insert({
+     customer: "Ganesh",
+     ord_date: new Date("Mar 01, 2016"),
+     status: 'completed',
+     price: 75,
+     items: [ { item: "item3", qty: 5, price: 8.5 },
+              { item: "item4", qty: 5, price: 9.5 } ]
+})
+
+db.orders.insert({
+     customer: "Ganesh",
+     ord_date: new Date("Apr 01, 2016"),
+     status: 'completed',
+     price: 55,
+     items: [ { item: "item3", qty: 5, price: 6.5 },
+              { item: "item4", qty: 5, price: 4.5 } ]
+})
+
+//abc : [25, 45], abc : 70
+
+//xyz : [75, 55], xyz : 130
+
+var myMapFunction = function() {
+                       emit(this.customer, this.price);
+                   };
+var myReduceFunction = function(keyCustId, valuesPrices) {
+                          return Array.sum(valuesPrices);
+                      };
+
+db.orders.mapReduce(
+                     myMapFunction,
+                     myReduceFunction,
+                     { out: "customerordertotal" }
+                   )
+
+				   
+var mapFunction2 = function() {
+                       for (var idx = 0; idx < this.items.length; idx++) {
+                           var key = this.items[idx].item;
+                           var value = {
+                                         count: 1,
+                                         price: this.items[idx].price
+                                       };
+                           emit(key, value);
+                       }
+                    };
+					
+var reduceFunction2 = function(keySKU, countObjVals) {
+                     reducedVal = { count: 0, qty: 0 };
+
+                     for (var idx = 0; idx < countObjVals.length; idx++) {
+                         reducedVal.count += countObjVals[idx].count;
+                         reducedVal.qty += countObjVals[idx].qty;
+                     }
+
+                     return reducedVal;
+                  };
+				  
+				  
+var finalizeFunction2 = function (key, reducedVal) {
+
+                       reducedVal.avg = reducedVal.qty/reducedVal.count;
+
+                       return reducedVal;
+
+                    };
+					
+db.orders.mapReduce( mapFunction2,
+                     reduceFunction2,
+                     {
+                       out: { merge: "map_reduce_example" },
+                       query: { ord_date:
+                                  { $gt: new Date('01/01/2012') }
+                              },
+                       finalize: finalizeFunction2
+                     }
+                   )
+
+Assignments
+-------------
+-------------
+
+1.db.auditlog.find().pretty()
+
+{
+        "_id" : ObjectId("6180d8599a4a40932a209612"),
+        "address" : {
+                "building" : "108",
+                "coord" : [
+                        -73.98394379999999,
+                        40.75611139999999
+                ],
+                "street" : "West   44 Street",
+                "zipcode" : "10036"
+        },
+        "borough" : "Manhattan",
+        "cuisine" : "Japanese",
+        "grades" : [
+                {
+                        "date" : ISODate("2014-05-31T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 7
+                },
+                {
+                        "date" : ISODate("2013-05-29T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 11
+                },
+                {
+                        "date" : ISODate("2012-05-15T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 11
+                }
+        ],
+        "name" : "Sushi Zen",
+        "restaurant_id" : "40899971"
+}
+{
+        "_id" : ObjectId("6180d8599a4a40932a209613"),
+        "address" : {
+                "building" : "1412",
+                "coord" : [
+                        -73.9866522,
+                        40.7536411
+                ],
+                "street" : "Broadway",
+                "zipcode" : "10018"
+        },
+        "borough" : "Manhattan",
+        "cuisine" : "Sandwiches/Salads/Mixed Buffet",
+        "grades" : [
+                {
+                        "date" : ISODate("2014-04-16T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 5
+                },
+                {
+                        "date" : ISODate("2013-04-12T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 12
+                },
+                {
+                        "date" : ISODate("2012-04-11T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 13
+                },
+                {
+                        "date" : ISODate("2011-12-02T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 12
+                }
+        ],
+        "name" : "Europa Cafe",
+        "restaurant_id" : "40900039"
+}
+{
+        "_id" : ObjectId("6180d8599a4a40932a209614"),
+        "address" : {
+                "building" : "120",
+                "coord" : [
+                        -74.01065899999999,
+                        40.7082118
+                ],
+                "street" : "Broadway",
+                "zipcode" : "10005"
+        },
+        "borough" : "Manhattan",
+        "cuisine" : "American ",
+        "grades" : [
+                {
+                        "date" : ISODate("2014-02-03T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 11
+                },
+                {
+                        "date" : ISODate("2013-09-05T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 13
+                },
+                {
+                        "date" : ISODate("2013-03-25T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 9
+                },
+                {
+                        "date" : ISODate("2012-03-08T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 9
+                },
+                {
+                        "date" : ISODate("2011-03-22T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 8
+                }
+        ],
+        "name" : "Ashby'S Specialty",
+        "restaurant_id" : "40898366"
+}
+{
+        "_id" : ObjectId("6180d8599a4a40932a209615"),
+        "address" : {
+                "building" : "8405",
+                "coord" : [
+                        -74.02521709999999,
+                        40.6224629
+                ],
+                "street" : "5 Avenue",
+                "zipcode" : "11209"
+        },
+        "borough" : "Brooklyn",
+        "cuisine" : "Chinese",
+        "grades" : [
+                {
+                        "date" : ISODate("2014-02-25T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 12
+                },
+                {
+                        "date" : ISODate("2013-08-14T00:00:00Z"),
+                        "grade" : "C",
+                        "score" : 28
+                },
+                {
+                        "date" : ISODate("2012-07-18T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 13
+                },
+                {
+                        "date" : ISODate("2012-03-09T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 13
+                },
+                {
+                        "date" : ISODate("2011-10-27T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 12
+                },
+                {
+                        "date" : ISODate("2011-05-19T00:00:00Z"),
+                        "grade" : "A",
+                        "score" : 13
+                }
+        ],
+        "name" : "Chopstix Restaurant",
+        "restaurant_id" : "40900694"
+}
+
+2.db.auditlog.find({},{"restaurant_id":1,"name":1,"bought":1,"cuisine":1});
+
+{ "_id" : ObjectId("6180d8599a4a40932a209612"), "cuisine" : "Japanese", "name" : "Sushi Zen", "restaurant_id" : "40899971" }
+{ "_id" : ObjectId("6180d8599a4a40932a209613"), "cuisine" : "Sandwiches/Salads/Mixed Buffet", "name" : "Europa Cafe", "restaurant_id" : "40900039" }
+{ "_id" : ObjectId("6180d8599a4a40932a209614"), "cuisine" : "American ", "name" : "Ashby'S Specialty", "restaurant_id" : "40898366" }
+{ "_id" : ObjectId("6180d8599a4a40932a209615"), "cuisine" : "Chinese", "name" : "Chopstix Restaurant", "restaurant_id" : "40900694" }
+
+3.db.auditlog.find({},{"restaurant_id":1,"name":1,"bought":1,"cuisine":1,"_id":0})
+
+{ "cuisine" : "Japanese", "name" : "Sushi Zen", "restaurant_id" : "40899971" }
+{ "cuisine" : "Sandwiches/Salads/Mixed Buffet", "name" : "Europa Cafe", "restaurant_id" : "40900039" }
+{ "cuisine" : "American ", "name" : "Ashby'S Specialty", "restaurant_id" : "40898366" }
+{ "cuisine" : "Chinese", "name" : "Chopstix Restaurant", "restaurant_id" : "40900694" }
+
+4. db.auditlog.find({},{"restaurant_id":1,"name":1,"bought":1,"adress.zipcode":1,"_id":0})
+
+{ "name" : "Sushi Zen", "restaurant_id" : "40899971" }
+{ "name" : "Europa Cafe", "restaurant_id" : "40900039" }
+{ "name" : "Ashby'S Specialty", "restaurant_id" : "40898366" }
+{ "name" : "Chopstix Restaurant", "restaurant_id" : "40900694" }
+
+5. db.auditlog.find({"borough":"Bronx"});
+6.db.auditlog.find({"borough":"Borox"}).limit(5);
+7.db.auditlog.find({"borough":"Borox"}).skip(5).limit(5)
+8.db.auditlog.find({grades:{$elemMatch:{"score":{$gt:90}}}});
+9.db.auditlog.find({"address.coord":{$lt:-95.754168}});
