@@ -1,0 +1,769 @@
+show dbs
+
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+mydb    0.001GB
+
+show collections
+
+Categories
+auditlog
+auditlogs
+books
+categories
+contacts
+emp
+emps
+movie
+posts
+products
+restaurants
+temp1
+temp1users
+tempusers
+testusers
+users
+
+use mydb
+
+switched to db mydb
+
+db.movie.insert({"name":"3 idiots", "actor":"Amir"})
+
+{
+        "_id" : ObjectId("617b8d804e0d687f6025380d"),
+        "name" : "3 idiots",
+        "actor" : "Amir"
+}
+
+db.movie.insert({"_id":0001,"name":"3 idiots", "actor":"Amir"})
+
+{ "_id" : 1, "name" : "3 idiots", "actor" : "Amir" }
+
+db.movie.insert({"empid":"5135"})
+
+ "_id" : ObjectId("617b8e394e0d687f6025380e"), "empid" : "5135" }
+
+db.products.insert( { _id: 10, item: "box", qty: 20 } )
+
+{
+        "_id" : ObjectId("617be2164e0d687f6025381e"),
+        "name" : "fkhg",
+        "actor" : "jdfhg"
+}
+
+db.products.insert(
+   [
+     { _id: 11, item: "pencil", qty: 50, type: "no.2" },
+     { item: "pen", qty: 20 },
+     { item: "eraser", qty: 25 }
+   ]
+)
+
+{ "_id" : 10, "item" : "box", "qty" : 20 }
+{ "_id" : 11, "item" : "pencil", "qty" : 50, "type" : "no.2" }
+{ "_id" : ObjectId("617b8e9e4e0d687f6025380f"), "item" : "pen", "qty" : 20 }
+{
+        "_id" : ObjectId("617b8e9e4e0d687f60253810"),
+        "item" : "eraser",
+        "qty" : 25
+}
+
+
+db.products.insert( { item: "pen", qty: 20, "des" :{ item: "eraser", qty: 25 } })
+
+{
+        "_id" : ObjectId("617b8ec04e0d687f60253811"),
+        "item" : "pen",
+        "qty" : 20,
+        "des" : {
+                "item" : "eraser",
+                "qty" : 25
+        }
+}
+
+
+Creating explicit collections 
+----------------------------- 
+db.createCollection( "tempusers", 
+   { validator: { $and: 
+      [     
+		 { uname: {$type: "string"}},     
+         { phone: { $type: "string" } }, 
+         { email: { $regex: /@bookstore\.com$/ } }, 
+         { status: { $in: [ "Active", "InActive" ] } } 
+      ] 
+   } 
+} ) 
+ 
+ 
+//succeeds the opeartion, and just display warnings 
+db.createCollection( "temp1users", 
+   { 
+      validator: { $or: 
+         [ 
+            { uname: {$type: "string"}},     
+            { phone: { $type: "string" } }, 
+            { email: { $regex: /@bookstore\.com$/ } }, 
+            { status: { $in: [ "Active", "InActive" ] } } 
+         ] 
+      }, 
+      validationAction: "warn" 
+   } 
+) 
+
+db.createCollection( "temp1", 
+   { 
+      validator: { $jsonSchema: {
+		required:["username", "password"],
+		properties:{
+         username: {bsonType: "string"}
+         }
+	}      
+   } 
+   }
+) 
+
+db.createCollection( "contacts", {
+   validator: { $jsonSchema: {
+      bsonType: "object",
+      required: [ "phone" ],
+      properties: {
+         phone: {
+            bsonType: "string",
+            description: "must be a string and is required"
+         },
+         email: {
+            bsonType : "string",
+            pattern : "@mongodb\.com$",
+            description: "must be a string and match the regular expression pattern"
+         },
+         status: {
+            enum: [ "Unknown", "Incomplete" ],
+            description: "can only be one of the enum values"
+         }
+      }
+   } }
+} )
+
+db.temp1.insert( 
+{ 
+    first_name:"William", 
+    last_name: "Shakespeare", 
+    username: "william",
+	password:"xxxxxxxx",
+    phone: "+1 56498245", 
+    email: "william@bookstore.com", 
+})
+
+{
+        "_id" : ObjectId("617b97684e0d687f60253812"),
+        "first_name" : "William",
+        "last_name" : "Shakespeare",
+        "username" : "william",
+        "password" : "xxxxxxxx",
+        "phone" : "+1 56498245",
+        "email" : "william@bookstore.com"
+}
+ 
+ 
+//Successfull insert 
+db.tempusers.insert( 
+{ 
+    first_name:"William", 
+    last_name: "Shakespeare", 
+    uname: "william", 
+    phone: "+1 56498245", 
+    email: "william@bookstore.com",   
+	status: "Active", 
+    address:  
+    { 
+        city:"Bangalore", 
+        pincode: "560049", 
+        state: "Karnataka", 
+        country: "india" 
+    } 
+}) 
+
+{
+        "_id" : ObjectId("6180cba4cbe3c384cda4eb34"),
+        "first_name" : "William",
+        "last_name" : "Shakespeare",
+        "uname" : "william",
+        "phone" : "+1 56498245",
+        "email" : "william@bookstore.com",
+        "status" : "Active",
+        "address" : {
+                "city" : "Bangalore",
+                "pincode" : "560049",
+                "state" : "Karnataka",
+                "country" : "india"
+        }
+}
+ 
+ 
+//Successful insert -- If you change the $or to $and, then this will be a failure attempt 
+db.tempusers.insert( 
+{ 
+    first_name:"Dan", 
+    last_name: "Brown", 
+    uname: "dan", 
+    phone: "+1 56498245", 
+    email: "dan@bookstore.com", 
+    status: "Something else" ,
+    address:  
+    { 
+        city:"Bangalore", 
+        pincode: "560001", 
+        state: "Karnataka", 
+        country: "india" 
+    } 
+}) 
+ 
+{
+        "_id" : ObjectId("617b98b94e0d687f60253814"),
+        "first_name" : "William",
+        "last_name" : "Shakespeare",
+        "uname" : "william",
+        "phone" : "+1 56498245",
+        "email" : "william@bookstore.com",
+        "status" : "Active",
+        "address" : {
+                "city" : "Bangalore",
+                "pincode" : "560049",
+                "state" : "Karnataka",
+                "country" : "india"
+        }
+}
+{
+        "_id" : ObjectId("6180cba4cbe3c384cda4eb34"),
+        "first_name" : "William",
+        "last_name" : "Shakespeare",
+        "uname" : "william",
+        "phone" : "+1 56498245",
+        "email" : "william@bookstore.com",
+        "status" : "Active",
+        "address" : {
+                "city" : "Bangalore",
+                "pincode" : "560049",
+                "state" : "Karnataka",
+                "country" : "india"
+        }
+}
+
+db.users.insert( 
+{ 
+    first_name:"Dan", 
+    last_name: "Brown", 
+    uname: "dan", 
+    phone: "+1 56498245", 
+    email: "dan@bookstore.com", 
+        status: "Something else", 
+    address:  
+    { 
+        city:"Bangalore", 
+        pincode: "560001",
+        state: "Karnataka", 
+        country: "india" 
+    } 
+}) 
+
+
+{
+        "_id" : ObjectId("6180f028ee37cdda8cd59650"),
+        "first_name" : "Dan",
+        "last_name" : "Brown",
+        "uname" : "dan",
+        "phone" : "+1 56498245",
+        "email" : "dan@bookstore.com",
+        "status" : "Something else",
+        "address" : {
+                "city" : "Bangalore",
+                "pincode" : "560001",
+                "state" : "Karnataka",
+                "country" : "india"
+        }
+}
+ 
+db.users.insert( 
+{ 
+    first_name:"Sidney", 
+    last_name: "Sheldon", 
+    uname: "sidney", 
+    phone: "+1 91357846", 
+    email: "sidney@bookstore.com", 
+    status: "Active" ,
+    address:  
+    { 
+        city:"Bangalore", 
+        pincode: "560001",
+        state: "Karnataka", 
+        country: "india" 
+    } 
+}) 
+
+{
+        "_id" : ObjectId("6180f0a0ee37cdda8cd59652"),
+        "first_name" : "Sidney",
+        "last_name" : "Sheldon",
+        "uname" : "sidney",
+        "phone" : "+1 91357846",
+        "email" : "sidney@bookstore.com",
+        "status" : "Active",
+        "address" : {
+                "city" : "Bangalore",
+                "pincode" : "560001",
+                "state" : "Karnataka",
+                "country" : "india"
+        }
+}
+
+db.auditlogs.insert( 
+{ 
+    _id:"2",
+	first_name:"Sidney", 
+    last_name: "Sheldon", 
+    uname: "sidney", 
+    phone: "+1 91357846", 
+    email: "sidney@bookstore.com", 
+    status: "Active" ,
+    address:  
+    { 
+        city:"Bangalore", 
+        pincode: "560001",
+        state: "Karnataka", 
+        country: "india" 
+    } 
+}) 
+
+WriteResult({
+        "nInserted" : 0,
+        "writeError" : {
+                "code" : 11000,
+                "errmsg" : "E11000 duplicate key error collection: mydb.auditlogs index: _id_ dup key: { _id: \"2\" }"
+        }
+})
+ 
+ 
+Capped Collections 
+------------------ 
+ 
+Capped collections are fixed-size collections & insert and retrieve documents based on insertion order.  
+ 
+db.createCollection( "auditlogs", { capped: true, size: 1 } ) 
+
+{ "ok" : 1 }
+ 
+Mainly used in the automatic removal of the documents, after reaching the specified size. 
+ 
+db.createCollection("auditlog", { capped : true, size : 2000, max : 5000 } ) 
+-> size - storage space
+-> max - count of documents
+-> size has the precedence over max
+ 
+Note : size is always mandatory
+ 
+
+Inserting Documents into Collections 
+-------------------------------------- 
+ 
+1) db.collection.insertOne  
+    -> inserts one document at any point of time 
+ 
+db.categories.insertOne( 
+   { 
+      name: "Web Development",
+      description: "All the books which has information on developing web applications" 
+   } 
+) 
+
+{
+        "_id" : 1,
+        "name" : "Mobile - Hybrid App Development",
+        "description" : "All the books which has information on developing hybrid mobile app"
+}
+ 
+2) db.collection.insertMany 
+    -> inserts multiple documents at the same time 
+ 
+db.categories.insertMany( 
+[ 
+   { 
+      name: "Mobile - Hybrid App Development",
+      description: "All the books which has information on developing hybrid mobile app"           
+   }, 
+   { 
+      name: "Mobile - IOS Development", 
+      description: "All the books which has information on developing ios app"           
+   },     
+   { 
+      name: "Mobile - Android App Development",
+      description: "All the books which has information on developing android app"           
+   }, 
+   { 
+      name: "NoSQL Database",
+      description: "All the books which deals with the NoSQL database categories"           
+   } 
+] 
+) 
+
+{
+        "_id" : 1,
+        "name" : "Mobile - Hybrid App Development",
+        "description" : "All the books which has information on developing hybrid mobile app"
+}
+{
+        "_id" : 2,
+        "name" : "Mobile - IOS Development",
+        "description" : "All the books which has information on developing ios app"
+}
+{
+        "_id" : 3,
+        "name" : "Mobile - Android App Development",
+        "description" : "All the books which has information on developing android app"
+}
+
+
+-> to drop db.categories.drop()
+
+2.1) db.collection.insertMany with our own id
+    -> inserts multiple documents at the same time 
+ 
+db.categories.insertMany( 
+[ 
+   { 
+		_id:1,
+      name: "Mobile - Hybrid App Development",
+      description: "All the books which has information on developing hybrid mobile app"           
+   }, 
+   { 
+		_id:2,
+      name: "Mobile - IOS Development", 
+      description: "All the books which has information on developing ios app"           
+   },     
+   { 
+		_id:3,
+      name: "Mobile - Android App Development",
+      description: "All the books which has information on developing android app"           
+   },
+	{ 
+		_id:3,
+      name: "Mobile - Android App Development",
+      description: "All the books which has information on developing android app"           
+   }  , 
+   { 
+	_id:6,
+      name: "NoSQL Database",
+      description: "All the books which deals with the NoSQL database categories"           
+   } 
+] 
+) 
+ 
+
+BulkWriteError({
+        "writeErrors" : [
+                {
+                        "index" : 0,
+                        "code" : 11000,
+                        "errmsg" : "E11000 duplicate key error collection: mydb.categories index: _id_ dup key: { _id: 1.0 }",
+                        "op" : {
+                                "_id" : 1,
+                                "name" : "Mobile - Hybrid App Development",
+                                "description" : "All the books which has information on developing hybrid mobile app"
+                        }
+                }
+        ],
+        "writeConcernErrors" : [ ],
+        "nInserted" : 0,
+        "nUpserted" : 0,
+        "nMatched" : 0,
+        "nModified" : 0,
+        "nRemoved" : 0,
+        "upserted" : [ ]
+})
+
+
+3) db.collection.insert 
+    -> inserts single document or multiple documents 
+    -> returns a result which is of type BulkWriteResult 
+ 
+Importing from json file
+-------------------------------
+mongoimport --db <<db name>> --collection <<collection name>> --file <<json file name>>
+
+Updating an existing collection 
+------------------------------- 
+ 
+We can modify, fields of existing documents, or can replace the whole document itself, depending on the parameter we specify 
+ 
+Format 
+------ 
+ 
+db.collection.update( 
+   <query>, 
+   <update>, 
+   { 
+     upsert: <boolean>, 
+     multi: <boolean>, 
+     writeConcern: <document> -> will deal with this later 
+   } 
+) 
+ 
+<query> 
+    -> criteria to be matched 
+<update> 
+    -> the field, value pair to be updated 
+    -> upsert - indicates whether a new record to be inserted, in case the query is not able to find a matching record, default is false 
+    -> multi -  indicates whether multiple records can be updated or not, default is false 
+	->Write concern describes the level of acknowledgment requested from MongoDB for write operations to a standalone mongod or to replica sets or to sharded clusters.
+ 
+db.books.insert( 
+{ 
+    name: "MongoDB - The Definite Guide", 
+    description: "This book is split up into six sections, covering development, administration and deployment information", 
+    category: ObjectId("57c62e1a1fda343c983f245f"), 
+    authors: [{name: "Kristina Chodorow"}, {name: "Ann Spencer"}],  
+    tags: ["nosql","mongodb","document based db"], 
+    publisher: "oreilly", 
+    isbn: "978-93-5110-269-4", 
+    published_year: 2013, 
+    price: 780, 
+    no_of_pages : 424 
+} 
+) 
+
+
+{
+        "_id" : ObjectId("6180f239ee37cdda8cd59653"),
+        "name" : "MongoDB - The Definite Guide",
+        "description" : "This book is split up into six sections, covering development, administration and deployment information",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Kristina Chodorow"
+                },
+                {
+                        "name" : "Ann Spencer"
+                }
+        ],
+        "tags" : [
+                "nosql",
+                "mongodb",
+                "document based db"
+        ],
+        "publisher" : "oreilly",
+        "isbn" : "978-93-5110-269-4",
+        "published_year" : 2013,
+        "price" : 780,
+        "no_of_pages" : 424
+}
+
+
+ 
+db.books.insert( 
+{ 
+    name: "Pro ASP.NET MVC5", 
+    description: "Practical examples help to build maintainable, best performance web applications", 
+    category: ObjectId("57c62e1a1fda343c983f245f"), 
+    authors: [{name: "Adam Freeman"}], 
+    tags: ["mvc","aps.net","web application"],  
+    publisher: "apress", 
+    isbn: "978-81-322-3014-4", 
+        published_year: 2015, 
+    price: 990, 
+    no_of_pages : 600 
+} 
+) 
+
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381b"),
+        "name" : "Pro ASP.NET MVC5",
+        "description" : "Practical examples help to build maintainable, best performance web applications",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Adam Freeman"
+                }
+        ],
+        "tags" : [
+                "mvc",
+                "aps.net",
+                "web application"
+        ],
+        "publisher" : "apress",
+        "isbn" : "978-81-322-3014-4",
+        "published_year" : 2015,
+        "price" : 990,
+        "no_of_pages" : 600,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z")
+}
+
+
+ 
+db.books.insert( 
+{ 
+    name: "Pro AngularJs", 
+    description: "Learn to harness the power of modern web browsers", 
+    category: ObjectId("57c62e1a1fda343c983f245f"), 
+    authors: [{name: "Adam Freeman"}],  
+    tags: ["spa","javascript frameworks","web application"], 
+    publisher: "apress", 
+    isbn: "978-81-322-3096-0", 
+        published_year: 2016, 
+    price: 855, 
+    no_of_pages : 505 
+} 
+) 
+ 
+
+{
+        "_id" : ObjectId("617bcc084e0d687f6025381c"),
+        "name" : "Pro AngularJs",
+        "description" : "Learn to harness the power of modern web browsers",
+        "category" : ObjectId("57c62e1a1fda343c983f245f"),
+        "authors" : [
+                {
+                        "name" : "Adam Freeman"
+                }
+        ],
+        "tags" : [
+                "spa",
+                "javascript frameworks",
+                "web application"
+        ],
+        "publisher" : "apress",
+        "isbn" : "978-81-322-3096-0",
+        "published_year" : 2016,
+        "price" : 855,
+        "no_of_pages" : 505,
+        "join_date" : ISODate("2021-10-29T10:27:52.724Z")
+}
+
+
+db.books.insert( 
+{ 
+    name: "Ionic in Action", 
+    description: "Hybrid mobile apps with Ionic and AngularJs", 
+    category: ObjectId("57c62eb01fda343c983f2460"), 
+    authors: [{name: "Jeremy Wilken"}],  
+    tags: ["angularjs","hybrid mobile app","open source"], 
+    publisher: "manning", 
+    isbn: "978-81-633-4300-82", 
+        published_year: 2016, 
+    price: 1070, 
+    no_of_pages : 230 
+} 
+) 
+
+{
+        "_id" : ObjectId("6180f2e8ee37cdda8cd59654"),
+        "name" : "Ionic in Action",
+        "description" : "Hybrid mobile apps with Ionic and AngularJs",
+        "category" : ObjectId("57c62eb01fda343c983f2460"),
+        "authors" : [
+                {
+                        "name" : "Jeremy Wilken"
+                }
+        ],
+        "tags" : [
+                "angularjs",
+                "hybrid mobile app",
+                "open source"
+        ],
+        "publisher" : "manning",
+        "isbn" : "978-81-633-4300-82",
+        "published_year" : 2016,
+        "price" : 1070,
+        "no_of_pages" : 230
+}
+
+
+ 
+ 
+Trying Update queries 
+--> upsert: true - like insert_update
+------------------- 
+Alter Collections
+--------------------------------------
+Collections do not describe or enforce the structure of its documents; i.e. there is no structural alteration at the collection level.
+However, at the document level, updateMany() operations can add fields to existing documents using the $set operator.
+
+db.books.updateMany(
+    { },
+    { $set: { purchase_date: new Date() } }
+)
+
+
+{ "acknowledged" : true, "matchedCount" : 7, "modifiedCount" : 7 }
+
+
+db.books.updateMany(
+{},
+
+{$set : { join_date: new Date() }})
+
+
+{ "acknowledged" : true, "matchedCount" : 7, "modifiedCount" : 7 }
+
+
+To remove field
+
+db.books.updateMany(
+    { },
+    { $unset: { "purchase_date": "" } }
+)
+
+The $rename operator updates the name of a field and has the following form:
+db.books.update({},{$rename:{"name":"bookname"}})
+db.users.update( { _id: "1" }, { $rename: { 'last_name': 'lname', 'first_name': 'fname' } } )
+Updation
+=========
+db.books.update( 
+   { name: "Ionic in Action" }, 
+   {  
+    newfield : 230 
+   }, 
+   { upsert: true } 
+) 
+ 
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+db.books.update( 
+   { name: "Writing Modern Web Apps with the MEAN Stack" }, 
+   { 
+      name: "Writing Modern Web Apps with the MEAN Stack", 
+      category: ObjectId("57c62e1a1fda343c983f245f"), 
+      authors: [{name: "Jeff Dickey"}],  
+      tags: ["mean","nodejs","expressjs","open source"], 
+      publisher: "Apress", 
+      isbn: "978-0-13-393015-3", 
+      published_year: 2016, 
+      price: 3000, 
+      no_of_pages : 246     
+   }, 
+   { upsert: true } 
+) 
+
+WriteResult({
+        "nMatched" : 0,
+        "nUpserted" : 1,
+        "nModified" : 0,
+        "_id" : ObjectId("6180f39a445d533566e77f55")
+})
+
+ 
+db.books.update( 
+   { name: "Writing Modern Web Apps with the MEAN Stack" }, 
+   { 
+      tags: ["mean","nodejs","expressjs","open source", "full stack"],       
+   }, 
+   { upsert: false } 
+) 
+
+
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+
+--> updateOne - update the first match
+--> updaetMany - update all
